@@ -4,6 +4,7 @@ import os
 
 MY_SNAKE_ID = '3c7ea45f-9741-4324-8071-6cadd06b5307'
 
+
 @bottle.route('/static/<path:path>')
 def static(path):
     return bottle.static_file(path, root='static/')
@@ -36,8 +37,8 @@ def move():
     head = None
     tail = None
     food_list = data['food']
-    print data
-    board = data['board']
+    ncols = data['width']
+    nrows = data['height']
 
     for snake in snakes:
         if snake['id'] == MY_SNAKE_ID:
@@ -49,7 +50,7 @@ def move():
 
     if food_list:
         food_position = get_closest_food_position(head, food_list)
-        action = decide_action(head, food_position, tail, board, snakes)
+        action = decide_action(head, food_position, tail, ncols, nrows, snakes)
     else:
         action = 'north'
 
@@ -59,28 +60,26 @@ def move():
     }
 
 
-def decide_action(head, food_position, tail, board, snakes):
+def decide_action(head, food_position, tail, ncols, nrows, snakes):
     if head[0] < food_position[0]:
         new_position = [head[0] + 1, head[1]]
-        if is_safe(new_position, tail, board, snakes):
+        if is_safe(new_position, tail, ncols, nrows, snakes):
             return 'east'
 
     elif head[0] > food_position[0]:
         new_position = [head[0] - 1, head[1]]
-        if is_safe(new_position, tail, board, snakes):
+        if is_safe(new_position, tail, ncols, nrows, snakes):
             return 'west'
 
     elif head[1] < food_position[1]:
         new_position = [head[0], head[1] + 1]
-        if is_safe(new_position, tail, board, snakes):
+        if is_safe(new_position, tail, ncols, nrows, snakes):
             return 'south'
 
     return 'north'
 
 
-def is_safe(new_position, tail, board, snakes):
-    ncols = board['width']
-    nrows = board['height']
+def is_safe(new_position, tail, ncols, nrows, snakes):
     x = new_position[0]
     y = new_position[1]
     occupied_tiles = []
