@@ -35,20 +35,22 @@ def move():
     data = bottle.request.json
     snakes = data['snakes']
     head_position = None
+    tail = None
     food_list = data['food']
 
     for snake in snakes:
         if snake['id'] == MY_SNAKE_ID:
             head_position = snake['coords'][0]
+            tail = snake['coords']
 
     print "HEAD POSITION: %s" % head_position
     print "Food List: %s" % food_list
 
     if food_list and len(food_list) > 1:
         food_position = get_closest_food_position(head_position, food_list)
-        action = decide_action(head_position, food_position)
+        action = decide_action(head_position, food_position, tail)
     elif food_list:
-        action = decide_action(head_position, food_list[0])
+        action = decide_action(head_position, food_list[0], tail)
     else:
         action = 'north'
 
@@ -58,22 +60,35 @@ def move():
     }
 
 
-def decide_action(head_position, food_position):
+def decide_action(head_position, food_position, tail):
     head_x = head_position[0]
     head_y = head_position[1]
     food_x = food_position[0]
     food_y = food_position[1]
 
     if head_x < food_x:
-        return 'east'
+        x_position = head_x + 1
+        new_position = [x_position, head_y]
+        if is_safe(new_position, tail):
+            return 'east'
 
     elif head_x > food_x:
-        return 'west'
+        x_position = head_x - 1
+        new_position = [x_position, head_y]
+        if is_safe(new_position, tail):
+            return 'west'
 
     elif head_y < food_y:
-        return 'south'
+        y_position = head_y + 1
+        new_position = [head_x, y_position]
+        if is_safe(y_position, tail):
+            return 'south'
 
     return 'north'
+
+
+def is_safe(new_position, tail):
+    return new_position in tail
 
 
 def get_closest_food_position(head_position, food_list):
