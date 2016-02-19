@@ -23,6 +23,7 @@ def index():
 @bottle.post('/start')
 def start():
     data = bottle.request.json
+    print data
 
     # TODO: Do things with data
 
@@ -34,6 +35,7 @@ def start():
 @bottle.post('/move')
 def move():
     data = bottle.request.json
+    print data
 
     # TODO: Do things with data
 
@@ -46,6 +48,7 @@ def move():
 @bottle.post('/end')
 def end():
     data = bottle.request.json
+    print data
 
     # TODO: Do things with data
 
