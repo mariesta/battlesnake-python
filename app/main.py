@@ -44,15 +44,13 @@ def move():
         if snake['id'] == MY_SNAKE_ID:
             head_position = snake['coords'][0]
 
-    if len(food_list) > 1:
+    if food_list and len(food_list) > 1:
         food_position = get_closest_food_position(head_position, food_list)
         action = decide_action(head_position, food_position)
     elif food_list:
         action = decide_action(head_position, food_list[0])
     else:
         action = 'north'
-
-    # TODO: Do things with data
 
     return {
         'move': action,
@@ -80,13 +78,11 @@ def decide_action(head_position, food_position):
 
 def get_closest_food_position(head_position, food_list):
     closest_food = None
-    smallest_result = 100
+    smallest_result = 999
     for food in food_list:
-        food_x = food[0]
-        food_y = food[1]
-        head_x = head_position[0]
-        head_y = head_position[1]
-        result = math.sqrt(math.pow((food_x - head_x), 2) + math.pow((food_y - head_y), 2))
+        x_dis = abs(food[0] - head_position[0])
+        y_dis = abs(food[1] - head_position[1])
+        result = x_dis + y_dis
         if smallest_result > result:
             smallest_result = result
             closest_food = food
