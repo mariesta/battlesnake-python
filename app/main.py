@@ -33,7 +33,7 @@ def start():
 @bottle.post('/move')
 def move():
     data = bottle.request.json
-    snakes, board_sizes = data['snakes']
+    snakes = data['snakes']
     head_position = None
     food_list = data['food']
 
