@@ -4,7 +4,6 @@ import os
 
 MY_SNAKE_ID = '3c7ea45f-9741-4324-8071-6cadd06b5307'
 
-
 @bottle.route('/static/<path:path>')
 def static(path):
     return bottle.static_file(path, root='static/')
@@ -37,6 +36,7 @@ def move():
     head = None
     tail = None
     food_list = data['food']
+    board = data['board']
 
     for snake in snakes:
         if snake['id'] == MY_SNAKE_ID:
@@ -46,11 +46,9 @@ def move():
     print "HEAD POSITION: %s" % head
     print "Food List: %s" % food_list
 
-    if food_list and len(food_list) > 1:
+    if food_list:
         food_position = get_closest_food_position(head, food_list)
-        action = decide_action(head, food_position, tail)
-    elif food_list:
-        action = decide_action(head, food_list[0], tail)
+        action = decide_action(head, food_position, tail, board, snakes)
     else:
         action = 'north'
 
@@ -60,27 +58,45 @@ def move():
     }
 
 
-def decide_action(head, food_position, tail):
+def decide_action(head, food_position, tail, board, snakes):
     if head[0] < food_position[0]:
         new_position = [head[0] + 1, head[1]]
-        if is_safe(new_position, tail):
+        if is_safe(new_position, tail, board, snakes):
             return 'east'
 
     elif head[0] > food_position[0]:
         new_position = [head[0] - 1, head[1]]
-        if is_safe(new_position, tail):
+        if is_safe(new_position, tail, board, snakes):
             return 'west'
 
     elif head[1] < food_position[1]:
         new_position = [head[0], head[1] + 1]
-        if is_safe(new_position, tail):
+        if is_safe(new_position, tail, board, snakes):
             return 'south'
 
     return 'north'
 
 
-def is_safe(new_position, tail):
-    return new_position not in tail
+def is_safe(new_position, tail, board, snakes):
+    ncols = board['width']
+    nrows = board['height']
+    x = new_position[0]
+    y = new_position[1]
+    occupied_tiles = []
+
+    # Check the walls
+    if x >= ncols or x < 1:
+        return False
+
+    if y >= nrows or y < 1:
+        return False
+
+    # Check other snakes
+    for snake in snakes:
+        if snake['id'] != MY_SNAKE_ID:
+            occupied_tiles = occupied_tiles + snake['coords']
+
+    return new_position not in tail and new_position not in occupied_tiles
 
 
 def get_closest_food_position(head, food_list):
