@@ -36,6 +36,7 @@ def move():
     head = None
     tail = None
     food_list = data['food']
+    print data
     board = data['board']
 
     for snake in snakes:
