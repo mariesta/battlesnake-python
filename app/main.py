@@ -88,7 +88,7 @@ def decide_action(head_position, food_position, tail):
 
 
 def is_safe(new_position, tail):
-    return new_position in tail
+    return new_position not in tail
 
 
 def get_closest_food_position(head_position, food_list):
