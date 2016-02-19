@@ -38,16 +38,19 @@ def move():
     width = board_sizes['width']
     height = board_sizes['height']
     head_position = None
-    health = None
     food_list = data['food']
 
     for snake in snakes:
         if snake['id'] == MY_SNAKE_ID:
             head_position = snake['coords'][0]
-            health = snake['health']
 
-    food_position = get_closest_food_position(head_position, food_list)
-    action = decide_action(head_position, food_position)
+    if len(food_list) > 1:
+        food_position = get_closest_food_position(head_position, food_list)
+        action = decide_action(head_position, food_position)
+    elif food_list:
+        action = decide_action(head_position, food_list[0])
+    else:
+        action = 'north'
 
     # TODO: Do things with data
 
