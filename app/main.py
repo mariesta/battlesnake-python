@@ -1,6 +1,5 @@
 import bottle
 import os
-import math
 
 
 MY_SNAKE_ID = '3c7ea45f-9741-4324-8071-6cadd06b5307'
@@ -34,15 +33,16 @@ def start():
 @bottle.post('/move')
 def move():
     data = bottle.request.json
-    snakes, board_sizes = data['snakes'], data['board']
-    width = board_sizes['width']
-    height = board_sizes['height']
+    snakes, board_sizes = data['snakes']
     head_position = None
     food_list = data['food']
 
     for snake in snakes:
         if snake['id'] == MY_SNAKE_ID:
             head_position = snake['coords'][0]
+
+    print "HEAD POSITION: %s" % head_position
+    print "Food List: %s" % food_list
 
     if food_list and len(food_list) > 1:
         food_position = get_closest_food_position(head_position, food_list)
