@@ -103,8 +103,6 @@ def get_closest_food_position(head, food_list, gold_position):
     closest_food = None
     smallest_result = 999
     snack_list = food_list + gold_position
-    print snack_list
-    print head
     for food in snack_list:
         x_dis = abs(food[0] - head[0])
         y_dis = abs(food[1] - head[1])
