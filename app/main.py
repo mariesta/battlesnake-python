@@ -3,6 +3,7 @@ import os
 
 
 MY_SNAKE_ID = '3c7ea45f-9741-4324-8071-6cadd06b5307'
+MY_SNAKE_NAME = 'unicorn snake'
 
 
 @bottle.route('/static/<path:path>')
@@ -44,7 +45,7 @@ def move():
     nrows = data['height']
 
     for snake in snakes:
-        if snake['id'] == MY_SNAKE_ID:
+        if snake['name'] == MY_SNAKE_NAME:
             head = snake['coords'][0]
             tail = snake['coords']
 
