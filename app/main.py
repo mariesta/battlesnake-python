@@ -37,6 +37,7 @@ def move():
     head = None
     tail = None
     food_list = data['food']
+    gold_position = data['gold']
     ncols = data['width']
     nrows = data['height']
 
@@ -45,11 +46,8 @@ def move():
             head = snake['coords'][0]
             tail = snake['coords']
 
-    print "HEAD POSITION: %s" % head
-    print "Food List: %s" % food_list
-
     if food_list:
-        food_position = get_closest_food_position(head, food_list)
+        food_position = get_closest_food_position(head, food_list, gold_position)
         action = decide_action(head, food_position, tail, ncols, nrows, snakes)
     else:
         action = 'north'
@@ -99,10 +97,11 @@ def is_safe(new_position, tail, ncols, nrows, snakes):
     return new_position not in tail and new_position not in occupied_tiles
 
 
-def get_closest_food_position(head, food_list):
+def get_closest_food_position(head, food_list, gold_position):
     closest_food = None
     smallest_result = 999
-    for food in food_list:
+    snack_list = food_list + gold_position
+    for food in snack_list:
         x_dis = abs(food[0] - head[0])
         y_dis = abs(food[1] - head[1])
         result = x_dis + y_dis
